@@ -36,7 +36,7 @@ export default function Appointment(props) {
     props.cancelInterview(props.id)
       .then(()=> transition(EMPTY));
   }
-
+  console.log(props.interview)
   return (
     <article className="appointment">
       <Header time={props.time} />
@@ -46,11 +46,21 @@ export default function Appointment(props) {
             student={props.interview.student}
             interviewer={props.interview.interviewer}
             onDelete={() => transition(CONFIRM)}
+            onEdit={() => transition(EDIT)}
           />
         )}
         {mode === CREATE && (
           <Form 
             interviewers={props.interviewers}
+            onCancel={() => back()}
+            onSave={save}
+          />
+        )}
+        {mode === EDIT && (
+          <Form
+            interviewers={props.interviewers}
+            name={props.interview.student}
+            interviewer={props.interview.interviewer.id}
             onCancel={() => back()}
             onSave={save}
           />
