@@ -11,10 +11,14 @@ export function useApplicationData() {
   });
 
   const setDay = day => setState({ ...state, day });
-  // const setDays = days => setState(prev => ({ ...prev, days }));
 
   function changeDay(day) {
     setDay(day);
+  }
+
+  function updateSpots() {
+    axios.get(`http://localhost:8001/api/days/`)
+      .then(res => setState({...state, days: res.data}))
   }
 
   function bookInterview(id, interview) {
@@ -29,8 +33,9 @@ export function useApplicationData() {
     return axios.put(
       `http://localhost:8001/api/appointments/${id}`,
       appointment
-    ).then(() => {
-      setState({...state, appointments})
+      ).then(() => {
+        setState({...state, appointments});
+        updateSpots();
     });
   }
 
@@ -47,7 +52,8 @@ export function useApplicationData() {
     return axios.delete(
       `http://localhost:8001/api/appointments/${id}`
     ).then(() => {
-      setState({...state, appointments})
+      setState({...state, appointments});
+      updateSpots();
     });
   }
   
