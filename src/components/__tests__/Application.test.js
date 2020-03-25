@@ -55,7 +55,7 @@ describe("Application", () =>{
   });
 
   
-  it("loads data, cancels an interview and increases the spots remaining for Monday by 1", async () => {
+  xit("loads data, cancels an interview and increases the spots remaining for Monday by 1", async () => {
     // 1. Render the Application.
     const { container, debug } = render(<Application/>);
     // 2. Wait until the text "Archie Cohen" is displayed.
@@ -77,6 +77,7 @@ describe("Application", () =>{
     // 8. Check that the DayListItem with the text "Monday" also has the text "2 spots remaining".
     const day = getAllByTestId(container, "day").find(day => queryByText(day, "Monday"));
     expect(getByText(day, "2 spots remaining")).toBeInTheDocument();
+
   });
 
   xit("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
@@ -105,7 +106,7 @@ describe("Application", () =>{
     expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
   });
 
-  xit("shows the save error when failing to save an appointment", async () => {
+  it("shows the save error when failing to save an appointment", async () => {
     axios.put.mockRejectedValueOnce("Error");
     // 1. Render the Application.
     const { container, debug } = render(<Application/>);
@@ -130,7 +131,7 @@ describe("Application", () =>{
     expect(getByText(appointment, "Error")).toBeInTheDocument();
   });
 
-  it("shows the delete error when failing to delete an existing appointment", async () => {
+  xit("shows the delete error when failing to delete an existing appointment", async () => {
     axios.delete.mockRejectedValueOnce("Error");
     // 1. Render the Application.
     const { container, debug } = render(<Application/>);

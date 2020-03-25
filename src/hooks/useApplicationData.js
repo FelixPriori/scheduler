@@ -22,52 +22,50 @@ export function useApplicationData() {
     let dayToUpdate = days.find(day => day.appointments.includes(id));
     // get the day to update's index
     let indexToUpdate = days.indexOf(dayToUpdate);
-    if (type === "delete") {
+    if (type === "DELETING") {
       dayToUpdate.spots += 1;
-    } else if (type === "book") {
+    } else if (type === "CREATE") {
       dayToUpdate.spots -= 1;
     }
     // const spots = days.appointments.reducer((acc, appId) => acc = state.appointments[appId].interview ? acc : acc + 1)
     days[indexToUpdate] = dayToUpdate;
-    setState({...state, days});
+    return days;
   }
 
-  function bookInterview(id, interview) {
+  function bookInterview(id, interview, mode) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
     return axios.put(
         `/api/appointments/${id}`,
         { interview }
       ).then(() => {
-        const appointment = {
-          ...state.appointments[id],
-          interview: { ...interview }
-        };
-        const appointments = {
-          ...state.appointments,
-          [id]: appointment
-        };
-        setState({...state, appointments})
-      }).then(() => {
-        updateSpots(id, "book");
+        const newDays = updateSpots(id, mode);
+        setState({...state, days:newDays, appointments})
       }).catch(e => console.log(e));
     //
   }
 
   function cancelInterview(id){
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    appointments[id].interview = null;
     return axios.delete(
       `/api/appointments/${id}`
     ).then(() => {
-      const appointment = {
-        ...state.appointments[id],
-        interview: null
-      };
-      const appointments = {
-        ...state.appointments,
-        [id]: appointment
-      };
-      appointments[id].interview = null;
-      setState({...state, appointments});
-    }).then(() => {
-      updateSpots(id, "delete");
+      const newDays = updateSpots(id, "DELETING");
+      setState({...state, days: newDays, appointments});
     }).catch(e => console.log(e));
   }
   
