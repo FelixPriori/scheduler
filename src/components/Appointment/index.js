@@ -40,7 +40,10 @@ export default function Appointment(props) {
     transition(DELETING, true);
     props.cancelInterview(props.id)
       .then(() => transition(EMPTY))
-      .catch(() => transition(ERROR_DELETE, true));
+      .catch(() =>{
+        console.log("I am in the catch")
+        transition(ERROR_DELETE, true)
+      });
   }
   return (
     <article className="appointment" data-testid="appointment">

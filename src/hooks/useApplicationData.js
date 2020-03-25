@@ -47,7 +47,7 @@ export function useApplicationData() {
       ).then(() => {
         const newDays = updateSpots(id, mode);
         setState({...state, days:newDays, appointments})
-      }).catch(e => console.log(e));
+      })
     //
   }
 
@@ -66,7 +66,7 @@ export function useApplicationData() {
     ).then(() => {
       const newDays = updateSpots(id, "DELETING");
       setState({...state, days: newDays, appointments});
-    }).catch(e => console.log(e));
+    })
   }
   
   useEffect(() => {
