@@ -9,6 +9,7 @@ import Confirm from "components/Appointment/Confirm";
 import Error from "components/Appointment/Error";
 import { useVisualMode } from 'hooks/useVisualMode';
 
+// mode variable declaration
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
 const CREATE = "CREATE";
@@ -20,31 +21,42 @@ const ERROR_DELETE = "ERROR_DELETE";
 const ERROR_SAVE = "ERROR_SAVE";
 
 export default function Appointment(props) {
+  // if interview is defined, then the default mode will be SHOW
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
   
+  // called when user clicks save
   function save(name, interviewer) {
+    // currentMode will dictate how the spots will be updated
+    // here it can be either EDIT or CREATE
     const currentMode = mode;
+    //setting up interview object to pass to the bookInterview function
     const interview = {
       student: name,
       interviewer
     };
+    // before doing the put request, switching to SAVING mode
     transition(SAVING);
     props.bookInterview(props.id, interview, currentMode)
+      // if bookInterview was successful, we show the new appointment
       .then(()=> transition(SHOW))
+      // else it will show the error message
       .catch(()=> transition(ERROR_SAVE, true));
   }
 
+  // called when the user clicks cancel
   function cancel() {
+    // before doing the delete request, switching to DELETING mode
     transition(DELETING, true);
     props.cancelInterview(props.id)
+      // if cancelInterview was successful, showing empty appointment
       .then(() => transition(EMPTY))
-      .catch(() =>{
-        console.log("I am in the catch")
-        transition(ERROR_DELETE, true)
-      });
+      // else, it will show the error message
+      .catch(() => transition(ERROR_DELETE, true));
   }
+
+  // What will be shown as an appointment depends on the current mode.
   return (
     <article className="appointment" data-testid="appointment">
       <Header time={props.time} />
